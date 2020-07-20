@@ -1,0 +1,124 @@
+AmazonOrderReferenceId
+
+Required
+xs:string	The order reference identifier.
+
+This value is retrieved from the Amazon Button widget after the buyer has successfully authenticated with Amazon.
+AuthorizationReferenceId
+
+Required
+xs:string	This identifier is defined by you and must be unique for every single API request, unless you plan to leverage the API idempotency.
+
+Use only the following characters:
+lowercase a-z
+uppercase A-Z
+numbers 0-9
+dash (-)
+underscore (_)
+Maximum: 32 characters
+
+AuthorizationAmount
+Required Price	Represents the amount to be authorized.
+
+Maximum value:
+US: $150,000
+UK: £150,000
+Germany: €150,000
+
+
+TransactionTimeout
+
+Optional
+xs:non
+negative
+Integer	The maximum number of minutes allocated for the Authorize operation call to be processed, after which the authorization is automatically declined and you cannot capture funds against the authorization.
+
+Note: In asynchronous mode, the Authorize operation always returns the State as Pending. The authorization remains in this state until it is processed by Amazon. The processing time varies and can be a minute or more. After processing is complete, Amazon notifies you of the final processing status. For more information, see Instant Payment Notification (IPN) in the Amazon Pay and Login with Amazon integration guide.
+
+Valid values: Zero or integer values in multiples of five (5, 10, 15, etc.). Set the value to zero for synchronous mode. Set the value to greater than zero for asynchronous mode.
+
+TransactionTimeout values in synchronous mode:
+Must be 0
+TransactionTimeout values in asynchronous mode:
+Minimum: 5
+Maximum: 1440
+Default: 1440
+
+CaptureNow
+
+Optional
+xs:boolean	Indicates whether to directly capture a specified amount against an order reference (without needing to call Capture and without waiting until the order ships). If set to true, specify the SellerAuthorizationNote. The captured amount is disbursed to your account in the next disbursement cycle.
+
+Note: The Amazon Pay policy states that you charge your buyer when you fulfill the items in the order. You should not collect funds before fulfilling the order.
+
+Allowed values:
+false--To capture the funds specified in this authorization, you must call the Capture operation.
+true--The specified amount is directly captured. You do not need to call the Capture operation.
+Default: false
+
+SoftDescriptor
+
+Optional
+xs:string	The description to be shown on the buyer's payment instrument statement if CaptureNow is set to true. The soft descriptor sent to the payment processor is: "AMZ* <soft descriptor specified here>".
+
+Default: "AMZ*<SELLER_NAME> pay.amazon.com"
+Maximum: 16 characters
+
+AmazonOrderReferenceId	Yes	
+xs:string	The order reference identifier.
+This value is retrieved from the Amazon Button widget after the buyer has successfully authenticated with Amazon.
+
+OrderReferenceAttributes	Yes	
+OrderReferenceAttributes	The merchant-specified attributes of the order reference.
+AmazonOrderReferenceId	The order reference identifier retrieved from the Amazon Button widget.
+
+Type: xs:string
+Buyer	Provides details about the buyer. This information will only be returned after you confirm the order reference.
+
+Type: Buyer
+OrderTotal	Represents the total amount for this Order Reference object. This response element is not returned if you have not set it by calling the SetOrderReferenceDetails operation.
+
+Type: OrderTotal
+SellerNote	Represents a description of the order that is displayed in emails to the buyer. This response element is not returned if you have not set it by calling the SetOrderReferenceDetails operation.
+
+Maximum: 1024 characters
+
+Type: xs:string
+PlatformId	Represents the SellerId of the Solution Provider that developed the eCommerce platform. This response element is not returned if you have not set it by calling the SetOrderReferenceDetails operation.
+
+Type: xs:string
+Destination	Represents the address selected by the buyer through the AddressBook widget.
+
+Complete buyer information will only be returned after you have confirmed the order reference or have specified a valid AccessToken in the GetOrderReferenceDetails operation. Until then, only the City, StateOrRegion, PostalCode, and CountryCode elements are returned.
+
+Type: Destination
+ReleaseEnvironment	Indicates if the order is for a Live (Production) or Sandbox environment.
+
+Type: xs:string
+SellerOrderAttributes	Provides more context about the order represented by this order reference. This response element is not returned if you have not set it by calling the SetOrderReferenceDetails operation.
+
+Type: SellerOrderAttributes
+OrderReferenceStatus	Indicates the current status of the order reference.
+
+For more information about the State and ReasonCode response elements, see Order Reference States and Reason Codes.
+
+Type: OrderReferenceStatus
+Constraints	A list of constraints that indicates mandatory information that is missing or incorrect. The presence of constraints indicates that the order reference is not ready to be confirmed and cannot be used for payment operations.
+
+For more information, see Order Reference Constraints.
+
+Type: List of Constraint
+CreationTimestamp	The date and time, in UTC, when the order reference was created. In ISO 8601 format.
+
+Type: xs:dateTime
+ExpirationTimestamp	The date and time, in UTC, when the order reference will expire and will no longer be valid for authorization requests. In ISO 8601 format.
+
+Note: An order reference (if confirmed) expires 180 days after it is created. It will be canceled by Amazon if it is not confirmed within three hours of its creation.
+
+Type: xs:dateTime
+IdList	A list of AmazonAuthorizationId identifiers that have been requested on this Order Reference object.
+
+This list is empty if you have not requested any authorizations on this order reference.
+
+Type: List of Type: xs:string
+
